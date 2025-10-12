@@ -1,0 +1,7 @@
+[
+  {
+    "directory": "/Users/matan.shaked/development/rendair",
+    "command": "gcc -Wall -Wextra -std=c11 -O2 -I/opt/homebrew/include/SDL2 -D_THREAD_SAFE -c -o src/main.o src/main.c",
+    "file": "src/main.c"
+  }
+]
