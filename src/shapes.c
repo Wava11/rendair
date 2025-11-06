@@ -1,6 +1,9 @@
 #include "shapes.h"
+#include "linalg.h"
 #include "renders.h"
+#include <math.h>
 #include <stddef.h>
+#include <stdio.h>
 
 void draw_square(struct Screen *screen, size_t top_left_x, size_t top_left_y,
                  size_t length, uint32_t color) {
@@ -11,21 +14,17 @@ void draw_square(struct Screen *screen, size_t top_left_x, size_t top_left_y,
   }
 }
 
-void draw_line(struct Screen *screen, struct Point p1, struct Point p2,
+void draw_line(struct Screen *screen, struct Vec2 p1, struct Vec2 p2,
                uint32_t color) {
-  struct Point left = p1.x < p2.x ? p1 : p2;
-  struct Point right = p1.x < p2.x ? p2 : p1;
+  struct Vec2 left = p1.x < p2.x ? p1 : p2;
+  struct Vec2 right = p1.x < p2.x ? p2 : p1;
 
-  float incline = (float)(right.y - left.y) / (float)(right.x - left.x);
+  float incline = (right.y - left.y) / (right.x - left.x);
+  printf("%f\n", incline);
 
-  size_t curr_x_length = 0;
-  size_t y = left.y;
-  for (size_t x = left.x; x <= right.x; x++) {
-    set_pixel(screen, x, y, color);
-    curr_x_length++;
-    if ((float)curr_x_length >= fabs(incline)) {
-      y++;
-      curr_x_length = 0;
-    }
+
+  for (float x = left.x; x <= right.x; x++) {
+   float y =  incline * (x - left.x) + left.y;
+   set_pixel(screen, (size_t)x, (size_t)y, color);
   }
 }
