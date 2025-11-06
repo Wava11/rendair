@@ -5,7 +5,7 @@ SDL_Window *get_window(int width, int height) {
   SDL_Log("Number of displays: %d", num_displays);
 
   int display_index =
-      1; // Change this to select a different display (0 = primary)
+      2; // Change this to select a different display (0 = primary)
   if (display_index >= num_displays) {
     display_index = 0;
   }

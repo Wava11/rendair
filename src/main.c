@@ -1,4 +1,5 @@
 #include "setup.h"
+#include "renders.h"
 #include <SDL.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -11,31 +12,12 @@ static const size_t NUM_BYTES_IN_FRAMEBUFFER =
     HEIGHT * WIDTH * sizeof(uint32_t);
 static uint32_t V_PIXELS[NUM_BYTES_IN_FRAMEBUFFER];
 
-#define set_pixel(pixels, pitch, x, y, color)                                  \
-  ((uint32_t *)((uint8_t *)pixels + y * pitch))[x] = color;
 
-void draw_square(void *pixels, int pitch, size_t top_left_x, size_t top_left_y,
-                 size_t length, uint32_t color) {
-  for (size_t i = 0; i < length; i++) {
-    for (size_t j = 0; j < length; j++) {
-      set_pixel(pixels, pitch, (top_left_x + i), (top_left_y + j), color);
-    }
-  }
-}
 
-void render(size_t frame_count, void *pixels, int pitch) {
-  size_t x = frame_count * 20 % WIDTH;
-  size_t y = (frame_count * 20 / WIDTH) * 20;
-
-  // Create color that cycles through RGB based on frame count
-  uint8_t r = (uint8_t)((256 * x / WIDTH) % 256);
-  uint8_t g = (uint8_t)((256 * x / WIDTH) % 256);
-  uint8_t b = (uint8_t)((256 * x / WIDTH) % 256);
-  uint32_t color = 0xFF000000 | (r << 16) | (g << 8) | b;
-
-  memset(V_PIXELS, 0, NUM_BYTES_IN_FRAMEBUFFER);
-  draw_square(V_PIXELS, pitch, x, y, 20, color);
-  memcpy(pixels, V_PIXELS, NUM_BYTES_IN_FRAMEBUFFER);
+void render(size_t frame_count, struct Screen* screen, void* pixels) {
+  // render_running_square(frame_count, screen);
+  render_line(screen);
+  memcpy(pixels, screen->pixels, NUM_BYTES_IN_FRAMEBUFFER);
 }
 
 int main(void) {
@@ -56,6 +38,12 @@ int main(void) {
   SDL_Event event;
 
   size_t frame_count = 0;
+  struct Screen screen = {
+    .pixels = V_PIXELS,
+    .pitch = WIDTH * sizeof(uint32_t),
+    .width = WIDTH,
+    .height = HEIGHT,
+  };
 
   while (running) {
     while (SDL_PollEvent(&event)) {
@@ -67,7 +55,7 @@ int main(void) {
     int pitch;
     SDL_LockTexture(framebuffer, NULL, &pixels, &pitch);
 
-    render(frame_count, pixels, pitch);
+    render(frame_count, &screen, pixels);
 
     SDL_UnlockTexture(framebuffer);
     SDL_RenderCopy(renderer, framebuffer, NULL, NULL);
