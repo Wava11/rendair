@@ -11,4 +11,5 @@ void draw_square(struct Screen *screen, size_t top_left_x, size_t top_left_y,
 
 void draw_line(struct Screen *screen, struct Vec2 p1, struct Vec2 p2, uint32_t color);
 
+
 #endif
