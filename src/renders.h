@@ -11,4 +11,6 @@ void render_running_square(struct Screen *screen, size_t frame_count);
 
 void render_lines(struct Screen *screen, size_t frame_count);
 
+void render_triangles(struct Screen *screen, size_t frame_count);
+
 #endif

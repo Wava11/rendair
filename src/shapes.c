@@ -41,3 +41,10 @@ void draw_line(struct Screen *screen, struct Vec2 p1, struct Vec2 p2,
     }
   }
 }
+
+void draw_triangle(struct Screen *screen, struct Vec2 p1, struct Vec2 p2,
+                   struct Vec2 p3, uint32_t color) {
+  draw_line(screen, p1, p2, color);
+  draw_line(screen, p2, p3, color);
+  draw_line(screen, p3, p1, color);
+}

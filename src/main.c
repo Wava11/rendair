@@ -14,7 +14,8 @@ static uint32_t V_PIXELS[NUM_BYTES_IN_FRAMEBUFFER];
 
 void render(size_t frame_count, struct Screen *screen, void *pixels) {
   // render_running_square(screen, frame_count);
-  render_lines(screen, frame_count);
+  // render_lines(screen, frame_count);
+  render_triangles(screen, frame_count);
   memcpy(pixels, screen->pixels, NUM_BYTES_IN_FRAMEBUFFER);
 }
 
@@ -65,8 +66,9 @@ int main(void) {
       SDL_UnlockTexture(framebuffer);
       SDL_RenderCopy(renderer, framebuffer, NULL, NULL);
       SDL_RenderPresent(renderer);
+    } else {
+      SDL_Delay(16); // Reduce CPU usage when paused
     }
-    // SDL_Delay(16); // ~60 FPS
   }
 
   printf("Quitting...\n");

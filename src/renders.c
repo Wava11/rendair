@@ -3,6 +3,10 @@
 #include "shapes.h"
 #include <stdlib.h>
 
+void clear_screen(struct Screen *screen) {
+  memset(screen->pixels, 0, screen->width * screen->height * sizeof(uint32_t));
+}
+
 void render_running_square(struct Screen *screen, size_t frame_count) {
   size_t x = frame_count * 20 % screen->width;
   size_t y = (frame_count * 20 / screen->width) * 20;
@@ -13,7 +17,7 @@ void render_running_square(struct Screen *screen, size_t frame_count) {
   uint8_t b = (uint8_t)((256 * x / screen->width) % 256);
   uint32_t color = 0xFF000000 | (r << 16) | (g << 8) | b;
 
-  memset(screen->pixels, 0, screen->width * screen->height * sizeof(uint32_t));
+  clear_screen(screen);
   draw_square(screen, x, y, 20, color);
 }
 
@@ -25,7 +29,7 @@ struct Vec2 generate_random_vec(struct Screen *screen) {
 }
 
 void render_lines(struct Screen *screen, size_t frame_count) {
-  memset(screen->pixels, 0, screen->width * screen->height * sizeof(uint32_t));
+  clear_screen(screen);
 
   float rotation_speed1 = 0.1;
   struct Vec2 c = {.x = 400., .y = 300.};
@@ -43,14 +47,33 @@ void render_lines(struct Screen *screen, size_t frame_count) {
   p22 = rotate_around(p22, c2, frame_count * rotation_speed2);
   draw_line(screen, p12, p22, 0xFFFFFFFF);
 
-  draw_line(screen,
-            (struct Vec2){.x = (50 + frame_count*3) % screen->width, .y = 50},
-            (struct Vec2){.x = (50 + frame_count*3) % screen->width, .y = 350},
-            0xFFFFFFFF);
+  draw_line(
+      screen,
+      (struct Vec2){.x = (50 + frame_count * 3) % screen->width, .y = 50},
+      (struct Vec2){.x = (50 + frame_count * 3) % screen->width, .y = 350},
+      0xFFFFFFFF);
 
   //   for (int i = 0; i < 2000; i++) {
   //     struct Vec2 p1 = generate_random_vec(screen);
   //     struct Vec2 p2 = generate_random_vec(screen);
   //     draw_line(screen, p1, p2, 0xFFFFFFFF);
   //   }
+}
+
+void render_triangles(struct Screen *screen, size_t frame_count) {
+  clear_screen(screen);
+
+  struct Vec2 p1 = {.x = 100., .y = 540.};
+  struct Vec2 p2 = {.x = 150., .y = 140.};
+  struct Vec2 p3 = {.x = 500., .y = 300.};
+
+  struct Vec2 c = {.x = (p1.x + p2.x + p3.x) / 3.,
+                   .y = (p1.y + p2.y + p3.y) / 3.};
+
+  float rotation_speed = 0.01;
+  p1 = rotate_around(p1, c, frame_count * rotation_speed);
+  p2 = rotate_around(p2, c, frame_count * rotation_speed);
+  p3 = rotate_around(p3, c, frame_count * rotation_speed);
+
+  draw_triangle(screen, p1, p2, p3, 0xFFFFFFFF);
 }
