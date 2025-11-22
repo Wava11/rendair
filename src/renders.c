@@ -74,13 +74,12 @@ void render_triangles(struct Screen *screen, size_t frame_count) {
 
   draw_triangle(screen, p1, p2, p3, 0xFFFFFFFF);
 
-
   struct Vec2 p12 = {.x = 100., .y = 240.};
   struct Vec2 p22 = {.x = 150., .y = 240.};
   struct Vec2 p32 = {.x = 150., .y = 100.};
 
   struct Vec2 c2 = {.x = (p12.x + p22.x + p32.x) / 3.,
-                   .y = (p12.y + p22.y + p32.y) / 3.};
+                    .y = (p12.y + p22.y + p32.y) / 3.};
 
   float rotation_speed2 = -0.02;
   p12 = rotate_around(p12, c2, frame_count * rotation_speed2);
@@ -107,4 +106,22 @@ void render_circles(struct Screen *screen, size_t frame_count) {
   draw_circle(screen, p1, 20, 0xFFFFFFFF);
   draw_circle(screen, p2, 20, 0xFFFFFFFF);
   draw_circle(screen, p3, 20, 0xFFFFFFFF);
+}
+
+void render_world(struct Screen *screen, struct World *world) {
+  for (size_t i = 0; i < world->entity_count; i++) {
+    struct Hull hull = world->hulls[i];
+    if (hull.type == CIRCLE) {
+      draw_circle(screen, hull.data.circle.center, hull.data.circle.radius,
+                  0xFFFFFFFF);
+    } else if (hull.type == POLYGON) {
+      for (size_t j = 0; j < hull.data.polygon.vertex_count; j++) {
+        struct Vec2 p1 = hull.data.polygon.vertices[j];
+        struct Vec2 p2 =
+            hull.data.polygon
+                .vertices[(j + 1) % hull.data.polygon.vertex_count];
+        draw_line(screen, p1, p2, 0xFFFFFFFF);
+      }
+    }
+  }
 }

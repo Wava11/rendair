@@ -1,3 +1,6 @@
+#include "physics/light.h"
+#include "physics/transforms.h"
+#include "physics/world.h"
 #include "renders.h"
 #include "setup.h"
 #include <SDL.h>
@@ -12,12 +15,21 @@ static const size_t NUM_BYTES_IN_FRAMEBUFFER =
     HEIGHT * WIDTH * sizeof(uint32_t);
 static uint32_t V_PIXELS[NUM_BYTES_IN_FRAMEBUFFER];
 
-void render(size_t frame_count, struct Screen *screen, void *pixels) {
+void render(size_t frame_count, struct Screen *screen, struct World *world,
+            void *pixels) {
   clear_screen(screen);
   // render_running_square(screen, frame_count);
-  render_lines(screen, frame_count);
-  render_triangles(screen, frame_count);
-  render_circles(screen, frame_count);
+  // render_lines(screen, frame_count);
+  // render_triangles(screen, frame_count);
+  // render_circles(screen, frame_count);
+
+  rotate_hull(&world->hulls[1], 0.01);
+  rotate_hull_around(&world->hulls[0], 0.01,
+                     (struct Vec2){.x = 200., .y = 300.});
+
+  render_world(screen, world);
+  render_point_light(screen, world, (struct Vec2){.x = 300., .y = 400.},
+                     0xFFFFFFFF);
   memcpy(pixels, screen->pixels, NUM_BYTES_IN_FRAMEBUFFER);
 }
 
@@ -29,8 +41,8 @@ int main(void) {
 
   SDL_Window *window = get_window(WIDTH, HEIGHT);
 
-  SDL_Renderer *renderer =
-      SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+  SDL_Renderer *renderer = SDL_CreateRenderer(
+      window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
   SDL_Texture *framebuffer =
       SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
                         SDL_TEXTUREACCESS_STREAMING, WIDTH, HEIGHT);
@@ -47,6 +59,15 @@ int main(void) {
       .height = HEIGHT,
   };
 
+  struct World world;
+  spawn_circle(&world, (struct Vec2){.x = 200., .y = 100.}, 50.);
+  struct Vec2 vertices[] = {
+      (struct Vec2){.x = 500., .y = 300.},
+      (struct Vec2){.x = 400., .y = 300.},
+      (struct Vec2){.x = 450., .y = 400.},
+  };
+  spawn_polygon(&world, vertices, 3);
+
   while (is_running) {
     while (SDL_PollEvent(&event)) {
       if (event.type == SDL_QUIT) {
@@ -62,7 +83,7 @@ int main(void) {
     if (!is_paused) {
       SDL_LockTexture(framebuffer, NULL, &pixels, &pitch);
 
-      render(frame_count, &screen, pixels);
+      render(frame_count, &screen, &world, pixels);
       frame_count++;
 
       SDL_UnlockTexture(framebuffer);

@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -std=c11 -O2 `sdl2-config --cflags`
 LDFLAGS = `sdl2-config --libs`
 
-SRC = $(wildcard src/*.c)
+SRC = $(wildcard src/*.c src/**/*.c)
 OBJ = $(patsubst src/%.c, build/%.o, $(SRC))
 BIN = rendair
 
@@ -12,7 +12,7 @@ $(BIN): $(OBJ)
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
 
 build/%.o: src/%.c
-	@mkdir -p build
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:

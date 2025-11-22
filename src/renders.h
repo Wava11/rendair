@@ -1,6 +1,7 @@
 #ifndef RENDERS_H
 #define RENDERS_H
 
+#include "./physics/world.h"
 #include "screen.h"
 #include <SDL.h>
 
@@ -16,5 +17,7 @@ void render_lines(struct Screen *screen, size_t frame_count);
 void render_triangles(struct Screen *screen, size_t frame_count);
 
 void render_circles(struct Screen *screen, size_t frame_count);
+
+void render_world(struct Screen *screen, struct World *world);
 
 #endif
