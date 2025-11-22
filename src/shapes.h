@@ -13,4 +13,6 @@ void draw_line(struct Screen *screen, struct Vec2 p1, struct Vec2 p2, uint32_t c
 
 void draw_triangle(struct Screen *screen, struct Vec2 p1, struct Vec2 p2, struct Vec2 p3, uint32_t color);
 
+void draw_circle(struct Screen *screen, struct Vec2 center, size_t radius, uint32_t color);
+
 #endif

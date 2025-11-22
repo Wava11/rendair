@@ -48,3 +48,13 @@ void draw_triangle(struct Screen *screen, struct Vec2 p1, struct Vec2 p2,
   draw_line(screen, p2, p3, color);
   draw_line(screen, p3, p1, color);
 }
+
+void draw_circle(struct Screen *screen, struct Vec2 center, size_t radius,
+                 uint32_t color) {
+  struct Vec2 p0 = {center.x + radius, center.y};
+  size_t circumference = 2 * radius * M_PI;
+  for (size_t i = 0; i < circumference; i++) {
+    struct Vec2 p = rotate_around(p0, center, i * (2 * M_PI / circumference));
+    set_pixel(screen, (size_t)p.x, (size_t)p.y, color);
+  }
+}

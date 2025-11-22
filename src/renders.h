@@ -7,10 +7,14 @@
 #define set_pixel(screen, x, y, color)                                         \
   ((uint32_t *)((uint8_t *)screen->pixels + y * screen->pitch))[x] = color;
 
+void clear_screen(struct Screen *screen);
+
 void render_running_square(struct Screen *screen, size_t frame_count);
 
 void render_lines(struct Screen *screen, size_t frame_count);
 
 void render_triangles(struct Screen *screen, size_t frame_count);
+
+void render_circles(struct Screen *screen, size_t frame_count);
 
 #endif
