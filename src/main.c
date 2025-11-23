@@ -23,7 +23,9 @@ void render(size_t frame_count, struct Screen *screen, struct World *world,
   // render_triangles(screen, frame_count);
   // render_circles(screen, frame_count);
 
-  rotate_hull(&world->hulls[1], 0.01);
+  // rotate_hull(&world->hulls[1], 0.01);
+  rotate_hull_around(&world->hulls[1], 0.01,
+                     (struct Vec2){.x = 300., .y = 400.});
   rotate_hull_around(&world->hulls[0], 0.01,
                      (struct Vec2){.x = 200., .y = 300.});
 
