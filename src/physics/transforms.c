@@ -59,3 +59,12 @@ void scale_hull(struct Hull *hull, float scale) {
     abort();
   }
 }
+
+void translate_entity(struct World *world, size_t entity_id,
+                      struct Vec2 translation) {
+  world->positions[entity_id] =
+      add_vec(world->positions[entity_id], translation);
+}
+void rotate_entity(struct World *world, size_t entity_id, float angle) {
+  world->rotations[entity_id] += angle;
+}

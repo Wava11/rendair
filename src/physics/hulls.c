@@ -27,7 +27,6 @@ int is_hull_completly_to_right_or_left_of(struct Hull *hull,
   }
 }
 
-
 struct ClosureBounds get_closure_bounds(struct Hull *hull,
                                         struct Vec2 reference_point) {
   struct ClosureBounds bounds;
@@ -80,28 +79,10 @@ struct ClosureBounds get_closure_bounds(struct Hull *hull,
   return bounds;
 }
 
-
 struct Vec2 get_hull_center(struct Hull *hull) {
   if (hull->type == POLYGON) {
-    // Calculate true centroid (center of mass) using the shoelace formula
-    float area = 0.0f;
-    struct Vec2 centroid = {.x = 0.0f, .y = 0.0f};
-
-    for (size_t i = 0; i < hull->data.polygon.vertex_count; i++) {
-      size_t j = (i + 1) % hull->data.polygon.vertex_count;
-      struct Vec2 vi = hull->data.polygon.vertices[i];
-      struct Vec2 vj = hull->data.polygon.vertices[j];
-
-      float cross = vi.x * vj.y - vj.x * vi.y;
-      area += cross;
-      centroid.x += (vi.x + vj.x) * cross;
-      centroid.y += (vi.y + vj.y) * cross;
-    }
-
-    area *= 0.5f;
-    centroid.x /= (6.0f * area);
-    centroid.y /= (6.0f * area);
-    return centroid;
+    return calculate_center(hull->data.polygon.vertices,
+                            hull->data.polygon.vertex_count);
   } else if (hull->type == CIRCLE) {
     return hull->data.circle.center;
   } else {
