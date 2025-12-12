@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug rendair",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/rendair",
+      "args": [],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build-debug"
+    }
+  ]
+}

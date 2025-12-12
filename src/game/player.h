@@ -1,0 +1,10 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
+#include "../physics/world.h"
+
+extern size_t PLAYER_ID;
+void spawn_player(struct World *world);
+
+
+#endif

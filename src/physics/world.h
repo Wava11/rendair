@@ -8,6 +8,8 @@
 struct World {
   size_t entity_count;
   struct Hull hulls[MAX_ENTITIES];
+  struct Vec2 positions[MAX_ENTITIES];
+  struct Vec2 rotations[MAX_ENTITIES];
 };
 
 void spawn_circle(struct World *world, struct Vec2 center, float radius);

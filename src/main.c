@@ -1,6 +1,8 @@
+#include "game/controls.h"
 #include "physics/light.h"
 #include "physics/transforms.h"
 #include "physics/world.h"
+#include "game/player.h"
 #include "renders.h"
 #include "setup.h"
 #include <SDL.h>
@@ -23,15 +25,16 @@ void render(size_t frame_count, struct Screen *screen, struct World *world,
   // render_triangles(screen, frame_count);
   // render_circles(screen, frame_count);
 
-  // rotate_hull(&world->hulls[1], 0.01);
-  rotate_hull_around(&world->hulls[1], 0.01,
+  rotate_hull(&world->hulls[1], 0.01);
+  rotate_hull_around(&world->hulls[1], 0.02,
                      (struct Vec2){.x = 300., .y = 400.});
-  rotate_hull_around(&world->hulls[0], 0.01,
+  rotate_hull(&world->hulls[1], -0.05);
+  rotate_hull_around(&world->hulls[0], 0.02,
                      (struct Vec2){.x = 200., .y = 300.});
 
   render_world(screen, world);
-  render_point_light(screen, world, (struct Vec2){.x = 300., .y = 400.},
-                     0xFFFFFFFF);
+  // render_point_light(screen, world, (struct Vec2){.x = 300., .y = 400.},
+  //  0xFFFFFFFF);
   memcpy(pixels, screen->pixels, NUM_BYTES_IN_FRAMEBUFFER);
 }
 
@@ -69,6 +72,7 @@ int main(void) {
       (struct Vec2){.x = 450., .y = 400.},
   };
   spawn_polygon(&world, vertices, 3);
+  spawn_player(&world);
 
   while (is_running) {
     while (SDL_PollEvent(&event)) {
@@ -83,6 +87,7 @@ int main(void) {
     void *pixels;
     int pitch;
     if (!is_paused) {
+      handle_player_controls(&world, &event);
       SDL_LockTexture(framebuffer, NULL, &pixels, &pitch);
 
       render(frame_count, &screen, &world, pixels);
