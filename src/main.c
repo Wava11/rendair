@@ -1,4 +1,5 @@
 #include "game/controls.h"
+#include "game/systems.h"
 #include "physics/light.h"
 #include "physics/transforms.h"
 #include "physics/world.h"
@@ -79,7 +80,7 @@ int main(void) {
       if (event.type == SDL_QUIT) {
         is_running = 0;
       } else if (event.type == SDL_KEYDOWN &&
-                 event.key.keysym.sym == SDLK_SPACE) {
+                 event.key.keysym.sym == SDLK_p) {
         is_paused = !is_paused;
       }
     }
@@ -90,6 +91,7 @@ int main(void) {
       handle_player_controls(&world, &event);
       SDL_LockTexture(framebuffer, NULL, &pixels, &pitch);
 
+      apply_systems(&world);
       render(frame_count, &screen, &world, pixels);
       frame_count++;
 

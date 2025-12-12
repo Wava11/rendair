@@ -14,6 +14,13 @@ void handle_player_controls(struct World *world, SDL_Event *event) {
   }
   if(keys[SDL_SCANCODE_UP]){
     struct Vec2 direction = angle_to_direction(world->rotations[PLAYER_ID]);
-    translate_entity(world, PLAYER_ID, mul_scalar_vec(player_speed, direction));
+    world->velocities[PLAYER_ID] =  mul_scalar_vec(player_speed, direction);
+  } else {
+    printf("%f\n", norm_vec(world->velocities[PLAYER_ID]));
+    if (norm_vec(world->velocities[PLAYER_ID]) > 0.1) {
+      world->velocities[PLAYER_ID] = mul_scalar_vec(0.99, world->velocities[PLAYER_ID]);
+    } else {
+      world->velocities[PLAYER_ID] = (struct Vec2){.x = 0., .y = 0.};
+    }
   }
 }
