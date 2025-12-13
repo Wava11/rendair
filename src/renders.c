@@ -1,5 +1,6 @@
 #include "renders.h"
 #include "linalg.h"
+#include "physics/world.h"
 #include "shapes.h"
 #include <stdlib.h>
 
@@ -110,16 +111,12 @@ void render_circles(struct Screen *screen, size_t frame_count) {
 
 void render_world(struct Screen *screen, struct World *world) {
   for (size_t entity_id = 0; entity_id < world->entity_count; entity_id++) {
-    struct Hull hull = world->hulls[entity_id];
+    struct Hull hull = get_positioned_hull(world, entity_id);
+
     if (hull.type == CIRCLE) {
       draw_circle(screen, hull.data.circle.center, hull.data.circle.radius,
                   0xFFFFFFFF);
     } else if (hull.type == POLYGON) {
-      // TODO: This might have a lot of overhead because in each frame we calculate the true vertices of each polygon.
-      translate_vecs(hull.data.polygon.vertices, hull.data.polygon.vertex_count,
-                     world->positions[entity_id]);
-      rotate_vecs(hull.data.polygon.vertices, hull.data.polygon.vertex_count,
-                  world->rotations[entity_id]);
       for (size_t j = 0; j < hull.data.polygon.vertex_count; j++) {
         struct Vec2 p1 = hull.data.polygon.vertices[j];
         struct Vec2 p2 =
@@ -130,10 +127,11 @@ void render_world(struct Screen *screen, struct World *world) {
 
       // debug
       struct Vec2 direction = angle_to_direction(world->rotations[entity_id]);
-      draw_line(screen, world->positions[entity_id],
-                add_vec(world->positions[entity_id],
-                        mul_scalar_vec(10, direction)),
-                0xFFFFFFFF);
+      draw_line(
+          screen, world->positions[entity_id],
+          add_vec(world->positions[entity_id], mul_scalar_vec(10, direction)),
+          0xFFFFFFFF);
+      draw_circle(screen, world->positions[entity_id], 5, 0xFFFFFFFF);
       //
     }
   }

@@ -7,3 +7,7 @@ void apply_velocities(struct World *world) {
     translate_entity(world, i, world->velocities[i]);
   }
 }
+
+void set_velocity(struct World *world, size_t entity_id, struct Vec2 velocity) {
+  world->velocities[entity_id] = velocity;
+}

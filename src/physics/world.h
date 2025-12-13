@@ -14,7 +14,9 @@ struct World {
   struct Vec2 velocities[MAX_ENTITIES];
 };
 
-void spawn_circle(struct World *world, struct Vec2 center, float radius);
-void spawn_polygon(struct World *world, struct Vec2 vertices[MAX_VERTICES], size_t vertex_count);
+size_t spawn_circle(struct World *world, struct Vec2 center, float radius);
+size_t spawn_polygon(struct World *world, struct Vec2 vertices[MAX_VERTICES], size_t vertex_count);
+
+struct Hull get_positioned_hull(struct World *world, size_t entity_id);
 
 #endif

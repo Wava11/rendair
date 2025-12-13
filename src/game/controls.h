@@ -4,6 +4,8 @@
 #include "../physics/world.h"
 #include <SDL.h>
 
-void handle_player_controls(struct World *world, SDL_Event *event);
+void handle_player_movement(struct World *world);
+void handle_player_fire(struct World *world, SDL_Event *event);
+
 
 #endif

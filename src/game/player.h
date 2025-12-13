@@ -7,5 +7,6 @@ extern size_t PLAYER_ID;
 extern float player_speed;
 void spawn_player(struct World *world);
 
+struct Vec2 get_player_gun_position(struct World *world);
 
 #endif

@@ -83,12 +83,13 @@ int main(void) {
                  event.key.keysym.sym == SDLK_p) {
         is_paused = !is_paused;
       }
+      handle_player_fire(&world, &event);
     }
 
     void *pixels;
     int pitch;
     if (!is_paused) {
-      handle_player_controls(&world, &event);
+      handle_player_movement(&world);
       SDL_LockTexture(framebuffer, NULL, &pixels, &pitch);
 
       apply_systems(&world);
